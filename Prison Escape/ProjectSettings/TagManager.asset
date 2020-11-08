@@ -14,9 +14,9 @@ TagManager:
   - 
   - 
   - Ground
-  - 
-  - 
-  - 
+  - Interactables
+  - Player
+  - BG
   - 
   - 
   - 
@@ -43,6 +43,9 @@ TagManager:
     locked: 0
   - name: Background
     uniqueID: 3618882981
+    locked: 0
+  - name: Interactables
+    uniqueID: 3506156599
     locked: 0
   - name: Player
     uniqueID: 313111157

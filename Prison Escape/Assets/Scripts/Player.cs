@@ -13,12 +13,15 @@ public class Player : MonoBehaviour
     private Rigidbody2D myRigidBody2D;
     private Animator myAnimator;
     private Collider2D myCollider2D;
+    private float gravityScaleAtStart;
+
     // Start is called before the first frame update
     void Start()
     {
         myRigidBody2D = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
         myCollider2D = GetComponent<Collider2D>();
+        gravityScaleAtStart = myRigidBody2D.gravityScale;
     }
 
     // Update is called once per frame
@@ -26,6 +29,7 @@ public class Player : MonoBehaviour
     {
         PlayerRun();
         PlayerJump();
+        PlayerClimb();
         HandlePlayerMovements();
     }
 
@@ -44,13 +48,26 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void PlayerClimb()
+    {
+        bool playerIsTouchingLadder = myCollider2D.IsTouchingLayers(LayerMask.GetMask("Interactables"));
+        bool playerHasVerticalVelocity = Mathf.Abs(myRigidBody2D.velocity.y) > Mathf.Epsilon;
+        myAnimator.SetBool("IsClimbing", playerIsTouchingLadder && playerHasVerticalVelocity && !myAnimator.GetBool("IsRunning"));
+        myRigidBody2D.gravityScale = playerIsTouchingLadder ? 0 : gravityScaleAtStart;
+        if (playerIsTouchingLadder)
+        {
+            Vector2 inputVelocity = new Vector2(myRigidBody2D.velocity.x, Input.GetAxis("Vertical") * playerSpeed);
+            myRigidBody2D.velocity = inputVelocity;
+        }
+    }
+
     private void HandlePlayerMovements()
     {
-        bool playerHasMoved = Mathf.Abs(myRigidBody2D.velocity.x) > Mathf.Epsilon;
-        myAnimator.SetBool("IsRunning", playerHasMoved);
-        if (playerHasMoved)
+        bool playerHasHorizontalVelocity = Mathf.Abs(myRigidBody2D.velocity.x) > Mathf.Epsilon;
+        myAnimator.SetBool("IsRunning", playerHasHorizontalVelocity && !myAnimator.GetBool("IsClimbing"));
+        if (playerHasHorizontalVelocity)
         {
-            transform.localScale = new Vector2(Mathf.Sign(myRigidBody2D.velocity.x) * 1f, transform.localScale.y);
+            transform.localScale = new Vector2(Mathf.Sign(myRigidBody2D.velocity.x), transform.localScale.y);
         }
     }
 }
