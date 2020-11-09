@@ -17,9 +17,9 @@ TagManager:
   - Interactables
   - Player
   - BG
-  - 
-  - 
-  - 
+  - Enemy
+  - Spikes
+  - LevelExit
   - 
   - 
   - 
@@ -50,6 +50,15 @@ TagManager:
   - name: Player
     uniqueID: 313111157
     locked: 0
+  - name: Spikes
+    uniqueID: 2367441541
+    locked: 0
+  - name: Enemy
+    uniqueID: 2744979089
+    locked: 0
   - name: Foreground
     uniqueID: 892598715
+    locked: 0
+  - name: LevelExit
+    uniqueID: 1296781695
     locked: 0

@@ -8,11 +8,16 @@ public class Player : MonoBehaviour
     // Configuration parameters
     [SerializeField] float playerSpeed = 5f;
     [SerializeField] float jumpForce = 20f;
+    [SerializeField] Vector2 deathPush = new Vector2(200f, 230f);
+
+    // State variables
+    private bool isAlive = true;
     
     // Chached parameters
     private Rigidbody2D myRigidBody2D;
     private Animator myAnimator;
-    private Collider2D myCollider2D;
+    private CapsuleCollider2D myBodyCollider;
+    private BoxCollider2D myFeetCollider;
     private float gravityScaleAtStart;
 
     // Start is called before the first frame update
@@ -20,17 +25,22 @@ public class Player : MonoBehaviour
     {
         myRigidBody2D = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
-        myCollider2D = GetComponent<Collider2D>();
+        myBodyCollider = GetComponent<CapsuleCollider2D>();
+        myFeetCollider = GetComponent<BoxCollider2D>();
         gravityScaleAtStart = myRigidBody2D.gravityScale;
     }
 
     // Update is called once per frame
     void Update()
     {
-        PlayerRun();
-        PlayerJump();
-        PlayerClimb();
-        HandlePlayerMovements();
+        if (isAlive)
+        {
+            PlayerRun();
+            PlayerJump();
+            PlayerClimb();
+            HandlePlayerMovements();
+            HandlePlayerDeath();
+        }
     }
 
     private void PlayerRun()
@@ -41,7 +51,7 @@ public class Player : MonoBehaviour
 
     private void PlayerJump()
     {
-        if (Input.GetButtonDown("Jump") && myCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        if (Input.GetButtonDown("Jump") && myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
             Vector2 jumpSpeed = new Vector2(0f, jumpForce);
             myRigidBody2D.velocity += jumpSpeed;
@@ -50,7 +60,7 @@ public class Player : MonoBehaviour
 
     private void PlayerClimb()
     {
-        bool playerIsTouchingLadder = myCollider2D.IsTouchingLayers(LayerMask.GetMask("Interactables"));
+        bool playerIsTouchingLadder = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Interactables"));
         bool playerHasVerticalVelocity = Mathf.Abs(myRigidBody2D.velocity.y) > Mathf.Epsilon;
         myAnimator.SetBool("IsClimbing", playerIsTouchingLadder && playerHasVerticalVelocity && !myAnimator.GetBool("IsRunning"));
         myRigidBody2D.gravityScale = playerIsTouchingLadder ? 0 : gravityScaleAtStart;
@@ -68,6 +78,21 @@ public class Player : MonoBehaviour
         if (playerHasHorizontalVelocity)
         {
             transform.localScale = new Vector2(Mathf.Sign(myRigidBody2D.velocity.x), transform.localScale.y);
+        }
+    }
+
+    private void HandlePlayerDeath()
+    {
+        if(myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
+        {
+            isAlive = false;
+            myAnimator.SetTrigger("IsDead");
+            myRigidBody2D.velocity = deathPush;
+        }
+        else if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Spikes")))
+        {
+            isAlive = false;
+            myAnimator.SetTrigger("IsDead");
         }
     }
 }
