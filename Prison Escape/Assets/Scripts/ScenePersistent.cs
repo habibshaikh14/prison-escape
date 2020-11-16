@@ -29,6 +29,7 @@ public class ScenePersistent : MonoBehaviour
         if (currentSceneIndex != objectSeneIndex)
         {
             Destroy(gameObject);
+            SceneManager.LoadScene(currentSceneIndex);
         }
     }
 }
