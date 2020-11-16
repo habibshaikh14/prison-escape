@@ -191,7 +191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpeed: 6
-  jumpForce: 16
+  jumpForce: 18
   deathPush: {x: 250, y: 250}
 --- !u!61 &119288070
 BoxCollider2D:

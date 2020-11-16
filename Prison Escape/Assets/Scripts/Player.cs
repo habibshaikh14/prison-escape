@@ -83,16 +83,15 @@ public class Player : MonoBehaviour
 
     private void HandlePlayerDeath()
     {
-        if(myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
+        if(myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy", "Spikes", "BGWater")))
         {
             isAlive = false;
             myAnimator.SetTrigger("IsDead");
-            myRigidBody2D.velocity = deathPush;
-        }
-        else if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Spikes")))
-        {
-            isAlive = false;
-            myAnimator.SetTrigger("IsDead");
+            if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
+            {
+                myRigidBody2D.velocity = deathPush;
+            }
+            FindObjectOfType<GameSession>().ProcessPlayerDeath();
         }
     }
 }
