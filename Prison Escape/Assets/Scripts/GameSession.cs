@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -23,7 +20,8 @@ public class GameSession : MonoBehaviour
         }
     }
 
-    private void Start() {
+    private void Start()
+    {
         livesText.text = playerLives.ToString();
         coinsText.text = playerCoins.ToString();
     }
@@ -55,7 +53,7 @@ public class GameSession : MonoBehaviour
 
     public void ProcessCoinPickup(int points)
     {
-        playerCoins+=points;
+        playerCoins += points;
         coinsText.text = playerCoins.ToString();
     }
 }

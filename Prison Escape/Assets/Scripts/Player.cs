@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Player : MonoBehaviour
 {
@@ -12,7 +9,7 @@ public class Player : MonoBehaviour
 
     // State variables
     private bool isAlive = true;
-    
+
     // Chached parameters
     private Rigidbody2D myRigidBody2D;
     private Animator myAnimator;
@@ -83,7 +80,7 @@ public class Player : MonoBehaviour
 
     private void HandlePlayerDeath()
     {
-        if(myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy", "Spikes", "BGWater")))
+        if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy", "Spikes", "BGWater")))
         {
             isAlive = false;
             myAnimator.SetTrigger("IsDead");
